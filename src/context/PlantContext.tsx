@@ -13,6 +13,7 @@ type Plant = {
   name: string;
   water: string;
   light: string;
+  image?: string;
 };
 
 

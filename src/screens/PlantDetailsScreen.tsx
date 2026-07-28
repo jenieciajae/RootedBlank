@@ -2,7 +2,8 @@ import {
   View, 
   Text, 
   StyleSheet, 
-  Pressable 
+  Pressable,
+  Image
 } from "react-native";
 
 import { usePlants } from "../context/PlantContext";
@@ -25,10 +26,21 @@ export default function PlantDetailsScreen({ route, navigation }: any) {
     <View style={styles.container}>
 
       <View style={styles.imagePlaceholder}>
-        <Text style={styles.imageText}>
-          🌿
-        </Text>
-      </View>
+
+  {plant.image ? (
+    <Image
+      source={{
+        uri: plant.image,
+      }}
+      style={styles.image}
+    />
+  ) : (
+    <Text style={styles.imageText}>
+      🌿
+    </Text>
+  )}
+
+</View>
 
 
       <Text style={styles.title}>
@@ -99,6 +111,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  image: {
+  width: "100%",
+  height: "100%",
+  borderRadius: 20,
+},
 
   imageText: {
     fontSize: 80,

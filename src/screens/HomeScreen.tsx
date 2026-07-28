@@ -25,6 +25,7 @@ export default function HomeScreen({ navigation }: any) {
             name={plant.name}
             water={plant.water}
             light={plant.light}
+            image={plant.image}
             navigation={navigation}
         />
         ))}

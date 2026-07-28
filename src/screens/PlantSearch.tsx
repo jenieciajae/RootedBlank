@@ -10,7 +10,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-import { searchPlants } from "../api/plantApi";
+import { searchPlants, getPlantDetails } from "../api/plantApi";
 
 export default function PlantSearch({ navigation }: any) {
   const [query, setQuery] = useState("");
@@ -79,17 +79,27 @@ export default function PlantSearch({ navigation }: any) {
 
     <Pressable
   style={styles.addButton}
-  onPress={() => {
-    addPlant({
-      name: item.common_name || item.scientific_name?.[0] || "Unknown Plant",
-      water: item.watering || "Unknown",
-      light: Array.isArray(item.sunlight)
-        ? item.sunlight.join(", ")
-        : item.sunlight || "Unknown",
-    });
+  onPress={async () => {
 
-    navigation.navigate("Home");
-  }}
+  const details = await getPlantDetails(item.id);
+
+  if (!details) return;
+
+  addPlant({
+  name: details.common_name || "Unknown Plant",
+
+  water:
+    details.watering || "Unknown",
+
+  light:
+    details.sunlight?.join(", ") || "Unknown",
+
+  image:
+    details.default_image?.regular_url || "",
+});
+
+  navigation.navigate("Home");
+}}
 >
   <Text style={styles.addButtonText}>
     Add to My Plants 🌿
