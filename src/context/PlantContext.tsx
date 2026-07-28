@@ -20,6 +20,7 @@ type PlantContextType = {
   plants: Plant[];
   addPlant: (plant: Omit<Plant, "id">) => void;
   deletePlant: (id: string) => void;
+  updatePlant: (plant: Plant) => void;
 };
 
 
@@ -123,14 +124,25 @@ export function PlantProvider({ children }: any) {
 
   };
 
+const updatePlant = (updatedPlant: Plant) => {
 
+  setPlants((currentPlants) =>
+    currentPlants.map((plant) =>
+      plant.id === updatedPlant.id
+        ? updatedPlant
+        : plant
+    )
+  );
+
+};
   return (
     <PlantContext.Provider
       value={{
-        plants,
-        addPlant,
-        deletePlant,
-      }}
+  plants,
+  addPlant,
+  deletePlant,
+  updatePlant,
+}}
     >
       {children}
     </PlantContext.Provider>

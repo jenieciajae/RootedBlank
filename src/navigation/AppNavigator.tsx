@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import AddPlantScreen from "../screens/AddPlantScreen";
 import PlantDetailsScreen from "../screens/PlantDetailsScreen";
+import EditPlantScreen from "../screens/EditPlantScreen";
+import PlantSearch from "../screens/PlantSearch";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +25,14 @@ export default function AppNavigator() {
         <Stack.Screen
             name="PlantDetails"
             component={PlantDetailsScreen}
+        />
+        <Stack.Screen
+             name="EditPlant"
+             component={EditPlantScreen}
+        />
+        <Stack.Screen
+  name="PlantSearch"
+  component={PlantSearch}
 />
       </Stack.Navigator>
     </NavigationContainer>

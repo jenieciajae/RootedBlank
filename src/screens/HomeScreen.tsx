@@ -34,6 +34,10 @@ export default function HomeScreen({ navigation }: any) {
         title="Add Plant"
         onPress={() => navigation.navigate("AddPlant")}
       />
+      <Button
+  title="Search Plants 🌱"
+  onPress={() => navigation.navigate("PlantSearch")}
+/>
 
     </View>
   );

@@ -57,7 +57,18 @@ export default function PlantDetailsScreen({ route, navigation }: any) {
         </Text>
       </View>
 
-
+    <Pressable
+    style={styles.editButton}
+     onPress={() =>
+    navigation.navigate("EditPlant", {
+      plant,
+    })
+  }
+        >
+         <Text style={styles.editText}>
+         ✏️ Edit Plant
+        </Text>
+        </Pressable>
       <Pressable 
         style={styles.deleteButton}
         onPress={handleDelete}
@@ -130,5 +141,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+editButton: {
+  backgroundColor: "#174d2c",
+  padding: 16,
+  borderRadius: 14,
+  alignItems: "center",
+  marginTop: 20,
+},
 
+editText: {
+  color: "white",
+  fontWeight: "bold",
+  fontSize: 16,
+},
 });
