@@ -132,7 +132,7 @@ const waterPlant = (id: string) => {
       plant.id === id
         ? {
             ...plant,
-            lastWatered: new Date().toLocaleDateString(),
+            lastWatered: new Date().toISOString(),
           }
         : plant
     )

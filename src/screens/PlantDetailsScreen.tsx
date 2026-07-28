@@ -8,6 +8,7 @@ import {
 
 import { usePlants } from "../context/PlantContext";
 import { useEffect } from "react";
+import { getNextWateringDate } from "../utils/Watering";
 
 
 export default function PlantDetailsScreen({ route, navigation }: any) {
@@ -18,6 +19,12 @@ export default function PlantDetailsScreen({ route, navigation }: any) {
 const currentPlant = plants.find(
   (item) => item.id === plant.id
 );
+const nextWatering = currentPlant
+  ? getNextWateringDate(
+      currentPlant.lastWatered,
+      currentPlant.water
+    )
+  : "Unknown";
 
 useEffect(() => {
   navigation.setParams({
@@ -86,6 +93,15 @@ useEffect(() => {
          {currentPlant?.lastWatered || "Not watered yet"}
     </Text>
     </View>
+    <View style={styles.card}>
+  <Text style={styles.label}>
+    🌱 Next Watering
+  </Text>
+
+  <Text style={styles.detail}>
+    {nextWatering}
+  </Text>
+</View>
     <Pressable
   style={styles.waterButton}
   onPress={() => {
