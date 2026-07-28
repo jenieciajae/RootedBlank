@@ -7,14 +7,23 @@ import {
 } from "react-native";
 
 import { usePlants } from "../context/PlantContext";
+import { useEffect } from "react";
 
 
 export default function PlantDetailsScreen({ route, navigation }: any) {
 
   const { plant } = route.params;
 
-  const { deletePlant } = usePlants();
+  const { plants, deletePlant, waterPlant } = usePlants();
+const currentPlant = plants.find(
+  (item) => item.id === plant.id
+);
 
+useEffect(() => {
+  navigation.setParams({
+    plant: currentPlant,
+  });
+}, [currentPlant]);
 
   const handleDelete = () => {
     deletePlant(plant.id);
@@ -44,8 +53,8 @@ export default function PlantDetailsScreen({ route, navigation }: any) {
 
 
       <Text style={styles.title}>
-        {plant.name}
-      </Text>
+         {currentPlant?.name}
+        </Text>
 
 
       <View style={styles.card}>
@@ -54,7 +63,7 @@ export default function PlantDetailsScreen({ route, navigation }: any) {
         </Text>
 
         <Text style={styles.detail}>
-          {plant.water}
+          {currentPlant?.water}
         </Text>
       </View>
 
@@ -65,10 +74,30 @@ export default function PlantDetailsScreen({ route, navigation }: any) {
         </Text>
 
         <Text style={styles.detail}>
-          {plant.light}
+          {currentPlant?.light}
         </Text>
       </View>
+    <View style={styles.card}>
+        <Text style={styles.label}>
+        💧 Last Watered
+        </Text>
 
+    <Text style={styles.detail}>
+         {currentPlant?.lastWatered || "Not watered yet"}
+    </Text>
+    </View>
+    <Pressable
+  style={styles.waterButton}
+  onPress={() => {
+    if (currentPlant) {
+      waterPlant(currentPlant.id);
+    }
+  }}
+>
+  <Text style={styles.waterText}>
+    💧 Mark as Watered
+  </Text>
+</Pressable>
     <Pressable
     style={styles.editButton}
      onPress={() =>
@@ -167,6 +196,19 @@ editButton: {
 },
 
 editText: {
+  color: "white",
+  fontWeight: "bold",
+  fontSize: 16,
+},
+waterButton: {
+  backgroundColor: "#5b8c5a",
+  padding: 16,
+  borderRadius: 14,
+  alignItems: "center",
+  marginTop: 10,
+},
+
+waterText: {
   color: "white",
   fontWeight: "bold",
   fontSize: 16,

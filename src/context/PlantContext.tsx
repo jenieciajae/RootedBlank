@@ -14,6 +14,7 @@ type Plant = {
   water: string;
   light: string;
   image?: string;
+  lastWatered?: string;
 };
 
 
@@ -22,6 +23,7 @@ type PlantContextType = {
   addPlant: (plant: Omit<Plant, "id">) => void;
   deletePlant: (id: string) => void;
   updatePlant: (plant: Plant) => void;
+  waterPlant: (id: string) => void;
 };
 
 
@@ -124,6 +126,19 @@ export function PlantProvider({ children }: any) {
     );
 
   };
+const waterPlant = (id: string) => {
+  setPlants((currentPlants) =>
+    currentPlants.map((plant) =>
+      plant.id === id
+        ? {
+            ...plant,
+            lastWatered: new Date().toLocaleDateString(),
+          }
+        : plant
+    )
+  );
+  console.log("Watered plant:", id);
+};
 
 const updatePlant = (updatedPlant: Plant) => {
 
@@ -138,13 +153,14 @@ const updatePlant = (updatedPlant: Plant) => {
 };
   return (
     <PlantContext.Provider
-      value={{
-  plants,
-  addPlant,
-  deletePlant,
-  updatePlant,
-}}
-    >
+  value={{
+    plants,
+    addPlant,
+    deletePlant,
+    updatePlant,
+    waterPlant,
+  }}
+>
       {children}
     </PlantContext.Provider>
   );
