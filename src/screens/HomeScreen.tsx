@@ -20,12 +20,13 @@ export default function HomeScreen({ navigation }: any) {
       <ScrollView>
         {plants.map((plant, index) => (
           <PlantCard
-            key={index}
+            key={plant.id}
+            id={plant.id}
             name={plant.name}
             water={plant.water}
             light={plant.light}
             navigation={navigation}
-          />
+        />
         ))}
       </ScrollView>
 

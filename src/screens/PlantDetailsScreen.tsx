@@ -1,32 +1,72 @@
-import { View, Text, StyleSheet } from "react-native";
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Pressable 
+} from "react-native";
 
-export default function PlantDetailsScreen({ route }: any) {
+import { usePlants } from "../context/PlantContext";
+
+
+export default function PlantDetailsScreen({ route, navigation }: any) {
 
   const { plant } = route.params;
+
+  const { deletePlant } = usePlants();
+
+
+  const handleDelete = () => {
+    deletePlant(plant.id);
+    navigation.navigate("Home");
+  };
+
 
   return (
     <View style={styles.container}>
 
+      <View style={styles.imagePlaceholder}>
+        <Text style={styles.imageText}>
+          🌿
+        </Text>
+      </View>
+
+
       <Text style={styles.title}>
-        🌱 {plant.name}
+        {plant.name}
       </Text>
 
-      <Text style={styles.label}>
-        💧 Water Schedule
-      </Text>
 
-      <Text style={styles.detail}>
-        {plant.water}
-      </Text>
+      <View style={styles.card}>
+        <Text style={styles.label}>
+          💧 Water Schedule
+        </Text>
 
-      <Text style={styles.label}>
-        ☀️ Light Requirements
-      </Text>
+        <Text style={styles.detail}>
+          {plant.water}
+        </Text>
+      </View>
 
-      <Text style={styles.detail}
+
+      <View style={styles.card}>
+        <Text style={styles.label}>
+          ☀️ Light Requirements
+        </Text>
+
+        <Text style={styles.detail}>
+          {plant.light}
+        </Text>
+      </View>
+
+
+      <Pressable 
+        style={styles.deleteButton}
+        onPress={handleDelete}
       >
-        {plant.light}
-      </Text>
+        <Text style={styles.deleteText}>
+          🗑 Delete Plant
+        </Text>
+      </Pressable>
+
 
     </View>
   );
@@ -34,26 +74,61 @@ export default function PlantDetailsScreen({ route }: any) {
 
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: "#f4f7f2",
   },
 
+  imagePlaceholder: {
+    height: 220,
+    borderRadius: 20,
+    backgroundColor: "#dce8d8",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  imageText: {
+    fontSize: 80,
+  },
+
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    marginBottom: 30,
+    marginVertical: 20,
+  },
+
+  card: {
+    backgroundColor: "white",
+    padding: 18,
+    borderRadius: 16,
+    marginBottom: 15,
   },
 
   label: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
-    marginTop: 20,
   },
 
   detail: {
-    fontSize: 18,
     marginTop: 8,
+    fontSize: 16,
+    color: "#555",
   },
+
+  deleteButton: {
+    backgroundColor: "#b33a3a",
+    padding: 16,
+    borderRadius: 14,
+    alignItems: "center",
+    marginTop: 20,
+  },
+
+  deleteText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+
 });

@@ -1,6 +1,7 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 
 type PlantCardProps = {
+id: string;
   name: string;
   water: string;
   light: string;
@@ -8,6 +9,7 @@ type PlantCardProps = {
 };
 
 export default function PlantCard({ 
+    id,
   name, 
   water, 
   light,
@@ -20,6 +22,7 @@ export default function PlantCard({
       onPress={() =>
         navigation.navigate("PlantDetails", {
           plant: {
+            id,
             name,
             water,
             light,
