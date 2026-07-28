@@ -5,7 +5,6 @@ import { usePlants } from "../context/PlantContext";
 export default function HomeScreen({ navigation }: any) {
 
   const { plants } = usePlants();
-  console.log("Plants:", plants);
 
   return (
     <View style={styles.container}>
@@ -25,6 +24,7 @@ export default function HomeScreen({ navigation }: any) {
             name={plant.name}
             water={plant.water}
             light={plant.light}
+            navigation={navigation}
           />
         ))}
       </ScrollView>

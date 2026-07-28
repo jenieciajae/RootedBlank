@@ -1,15 +1,35 @@
-import { View, Text, StyleSheet } from "react-native";
+import { Pressable, Text, StyleSheet } from "react-native";
 
 type PlantCardProps = {
   name: string;
   water: string;
   light: string;
+  navigation: any;
 };
 
-export default function PlantCard({ name, water, light }: PlantCardProps) {
+export default function PlantCard({ 
+  name, 
+  water, 
+  light,
+  navigation
+}: PlantCardProps) {
+
   return (
-    <View style={styles.card}>
-      <Text style={styles.plantName}>🌱 {name}</Text>
+    <Pressable
+      style={styles.card}
+      onPress={() =>
+        navigation.navigate("PlantDetails", {
+          plant: {
+            name,
+            water,
+            light,
+          },
+        })
+      }
+    >
+      <Text style={styles.plantName}>
+        🌱 {name}
+      </Text>
 
       <Text style={styles.info}>
         💧 Water: {water}
@@ -18,9 +38,11 @@ export default function PlantCard({ name, water, light }: PlantCardProps) {
       <Text style={styles.info}>
         ☀️ Light: {light}
       </Text>
-    </View>
+
+    </Pressable>
   );
 }
+
 
 const styles = StyleSheet.create({
   card: {
