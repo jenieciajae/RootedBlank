@@ -45,3 +45,26 @@ export function getNextWateringDate(
 
   return nextDate.toLocaleDateString();
 }
+export function needsWatering(
+  lastWatered: string | undefined,
+  wateringSchedule: string
+) {
+  if (!lastWatered) {
+    return true;
+  }
+
+  const nextWatering = getNextWateringDate(
+    lastWatered,
+    wateringSchedule
+  );
+
+  if (nextWatering === "Unknown") {
+    return false;
+  }
+
+  if (nextWatering === "Water this plant") {
+    return true;
+  }
+
+  return new Date(nextWatering) <= new Date();
+}

@@ -15,6 +15,8 @@ type Plant = {
   light: string;
   image?: string;
   lastWatered?: string;
+  nextWatering?: string;
+  favorite?: boolean;
 };
 
 
@@ -24,6 +26,7 @@ type PlantContextType = {
   deletePlant: (id: string) => void;
   updatePlant: (plant: Plant) => void;
   waterPlant: (id: string) => void;
+  toggleFavorite: (id: string) => void;
 };
 
 
@@ -31,7 +34,32 @@ const PlantContext = createContext<PlantContextType | undefined>(undefined);
 
 
 const PLANTS_KEY = "@rooted_plants";
+function calculateNextWatering(water: string) {
 
+  let days = 7;
+
+  if (water.toLowerCase().includes("frequent")) {
+    days = 3;
+  }
+
+  if (
+    water.toLowerCase().includes("rare") ||
+    water.toLowerCase().includes("2 weeks")
+  ) {
+    days = 14;
+  }
+
+
+  const date = new Date();
+
+  date.setDate(
+    date.getDate() + days
+  );
+
+
+  return date.toISOString();
+
+}
 
 export function PlantProvider({ children }: any) {
 
@@ -126,18 +154,47 @@ export function PlantProvider({ children }: any) {
     );
 
   };
-const waterPlant = (id: string) => {
+const waterPlant = async (id: string) => {
+
+  setPlants((currentPlants) => {
+
+    const updatedPlants = currentPlants.map((plant) =>
+      plant.id === id
+        ? {
+            ...plant,
+            lastWatered: new Date().toISOString(),
+            nextWatering: calculateNextWatering(plant.water),
+          }
+        : plant
+    );
+
+
+    AsyncStorage.setItem(
+      PLANTS_KEY,
+      JSON.stringify(updatedPlants)
+    );
+
+
+    return updatedPlants;
+
+  });
+
+
+  console.log("Watered plant:", id);
+
+};
+
+const toggleFavorite = (id: string) => {
   setPlants((currentPlants) =>
     currentPlants.map((plant) =>
       plant.id === id
         ? {
             ...plant,
-            lastWatered: new Date().toISOString(),
+            favorite: !plant.favorite,
           }
         : plant
     )
   );
-  console.log("Watered plant:", id);
 };
 
 const updatePlant = (updatedPlant: Plant) => {
@@ -159,6 +216,7 @@ const updatePlant = (updatedPlant: Plant) => {
     deletePlant,
     updatePlant,
     waterPlant,
+    toggleFavorite,
   }}
 >
       {children}

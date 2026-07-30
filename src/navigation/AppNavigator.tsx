@@ -6,34 +6,64 @@ import AddPlantScreen from "../screens/AddPlantScreen";
 import PlantDetailsScreen from "../screens/PlantDetailsScreen";
 import EditPlantScreen from "../screens/EditPlantScreen";
 import PlantSearch from "../screens/PlantSearch";
+import StatisticsScreen from "../screens/StatisticsScreen";
+import IdentifyPlantScreen from "../screens/IdentifyPlantScreen";
+import PlantResultScreen from "../screens/PlantResultScreen";
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  Home: undefined;
+  AddPlant: undefined;
+  PlantSearch: undefined;
+  PlantDetails: { plant: any };
+  EditPlant: { plant: any };
+  Statistics: undefined;
+  IdentifyPlant: undefined;
+  PlantResult: { image: string };
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen 
-          name="Home" 
-          component={HomeScreen} 
+
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
         />
 
-        <Stack.Screen 
-          name="AddPlant" 
-          component={AddPlantScreen} 
+        <Stack.Screen
+          name="AddPlant"
+          component={AddPlantScreen}
+        />
+
+        <Stack.Screen
+          name="PlantSearch"
+          component={PlantSearch}
+        />
+
+        <Stack.Screen
+          name="PlantDetails"
+          component={PlantDetailsScreen}
+        />
+
+        <Stack.Screen
+          name="EditPlant"
+          component={EditPlantScreen}
         />
         <Stack.Screen
-            name="PlantDetails"
-            component={PlantDetailsScreen}
+          name="Statistics"
+          component={StatisticsScreen}
         />
         <Stack.Screen
-             name="EditPlant"
-             component={EditPlantScreen}
+           name="IdentifyPlant"
+           component={IdentifyPlantScreen}
         />
         <Stack.Screen
-  name="PlantSearch"
-  component={PlantSearch}
-/>
+           name="PlantResult"
+           component={PlantResultScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

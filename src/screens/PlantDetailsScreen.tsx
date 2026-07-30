@@ -1,139 +1,183 @@
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
   Pressable,
-  Image
 } from "react-native";
 
 import { usePlants } from "../context/PlantContext";
-import { useEffect } from "react";
-import { getNextWateringDate } from "../utils/Watering";
+import { schedulePlantReminder } from "../utils/Notifications";
 
 
 export default function PlantDetailsScreen({ route, navigation }: any) {
 
-  const { plant } = route.params;
+ const { plant: passedPlant } = route.params;
 
-  const { plants, deletePlant, waterPlant } = usePlants();
-const currentPlant = plants.find(
-  (item) => item.id === plant.id
+const { plants } = usePlants();
+
+const plant = plants.find(
+  (p) => p.id === passedPlant.id
 );
-const nextWatering = currentPlant
-  ? getNextWateringDate(
-      currentPlant.lastWatered,
-      currentPlant.water
-    )
-  : "Unknown";
 
-useEffect(() => {
-  navigation.setParams({
-    plant: currentPlant,
-  });
-}, [currentPlant]);
+if (!plant) {
+  return (
+    <View style={styles.container}>
+      <Text>
+        Plant not found
+      </Text>
+    </View>
+  );
+}
 
-  const handleDelete = () => {
-    deletePlant(plant.id);
-    navigation.navigate("Home");
+console.log(
+  "CURRENT PLANT:",
+  JSON.stringify(plant, null, 2)
+);
+  const {
+    deletePlant,
+    waterPlant,
+    updatePlant,
+  } = usePlants();
+
+
+  const toggleFavorite = () => {
+
+    updatePlant({
+      ...plant,
+      favorite: !plant.favorite,
+    });
+
   };
 
 
   return (
     <View style={styles.container}>
 
-      <View style={styles.imagePlaceholder}>
-
-  {plant.image ? (
-    <Image
-      source={{
-        uri: plant.image,
-      }}
-      style={styles.image}
-    />
-  ) : (
-    <Text style={styles.imageText}>
-      🌿
-    </Text>
-  )}
-
-</View>
-
 
       <Text style={styles.title}>
-         {currentPlant?.name}
-        </Text>
+        🌿 Plant Details
+      </Text>
+
+
+
+      {plant.image && (
+        <Image
+          source={{ uri: plant.image }}
+          style={styles.image}
+        />
+      )}
+
 
 
       <View style={styles.card}>
-        <Text style={styles.label}>
-          💧 Water Schedule
+
+
+        <Text style={styles.plantName}>
+          {plant.name}
         </Text>
 
-        <Text style={styles.detail}>
-          {currentPlant?.water}
+
+        <Text style={styles.info}>
+          💧 Water: {plant.water}
         </Text>
+
+
+        <Text style={styles.info}>
+          ☀️ Light: {plant.light}
+        </Text>
+        <Text style={styles.info}>
+          💧 Last Watered:{" "}
+           {plant.lastWatered
+          ? new Date(plant.lastWatered).toLocaleDateString()
+          : "Not yet watered"}
+        </Text>
+
+
+        <Text style={styles.info}>
+           🌱 Next Watering:{" "}
+           {plant.nextWatering
+           ? new Date(plant.nextWatering).toLocaleDateString()
+          : "Not scheduled"}
+        </Text>
+
+        <Text style={styles.info}>
+          ⭐ Favorite: {plant.favorite ? "Yes" : "No"}
+        </Text>
+
+
+        
+
+
       </View>
 
 
-      <View style={styles.card}>
-        <Text style={styles.label}>
-          ☀️ Light Requirements
+
+      <Pressable
+        style={styles.button}
+        onPress={() => {
+
+        waterPlant(plant.id);
+
+       schedulePlantReminder(
+        plant.name,
+        plant.water
+);
+
+      }}
+      >
+
+        <Text style={styles.buttonText}>
+          💧 Mark as Watered
         </Text>
 
-        <Text style={styles.detail}>
-          {currentPlant?.light}
-        </Text>
-      </View>
-    <View style={styles.card}>
-        <Text style={styles.label}>
-        💧 Last Watered
+      </Pressable>
+
+
+
+      <Pressable
+        style={styles.button}
+        onPress={toggleFavorite}
+      >
+
+        <Text style={styles.buttonText}>
+          {plant.favorite
+            ? "⭐ Remove Favorite"
+            : "☆ Add Favorite"}
         </Text>
 
-    <Text style={styles.detail}>
-         {currentPlant?.lastWatered || "Not watered yet"}
-    </Text>
-    </View>
-    <View style={styles.card}>
-  <Text style={styles.label}>
-    🌱 Next Watering
-  </Text>
+      </Pressable>
 
-  <Text style={styles.detail}>
-    {nextWatering}
-  </Text>
-</View>
-    <Pressable
-  style={styles.waterButton}
-  onPress={() => {
-    if (currentPlant) {
-      waterPlant(currentPlant.id);
-    }
-  }}
->
-  <Text style={styles.waterText}>
-    💧 Mark as Watered
-  </Text>
-</Pressable>
-    <Pressable
-    style={styles.editButton}
-     onPress={() =>
+<Pressable
+  style={styles.button}
+  onPress={() =>
     navigation.navigate("EditPlant", {
       plant,
     })
   }
-        >
-         <Text style={styles.editText}>
-         ✏️ Edit Plant
-        </Text>
-        </Pressable>
-      <Pressable 
+>
+  <Text style={styles.buttonText}>
+    ✏️ Edit Plant
+  </Text>
+</Pressable>
+
+      <Pressable
         style={styles.deleteButton}
-        onPress={handleDelete}
+        onPress={() => {
+
+          deletePlant(plant.id);
+
+          navigation.navigate("Home");
+
+        }}
       >
-        <Text style={styles.deleteText}>
-          🗑 Delete Plant
+
+        <Text style={styles.buttonText}>
+          🗑️ Delete Plant
         </Text>
+
       </Pressable>
+
 
 
     </View>
@@ -141,92 +185,73 @@ useEffect(() => {
 }
 
 
+
 const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: "#f4f7f2",
+    padding: 20,
   },
 
-  imagePlaceholder: {
-    height: 220,
-    borderRadius: 20,
-    backgroundColor: "#dce8d8",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  image: {
-  width: "100%",
-  height: "100%",
-  borderRadius: 20,
-},
-
-  imageText: {
-    fontSize: 80,
-  },
 
   title: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "bold",
-    marginVertical: 20,
+    marginBottom: 20,
   },
+
+
+  image: {
+    width: "100%",
+    height: 250,
+    borderRadius: 20,
+    marginBottom: 20,
+  },
+
 
   card: {
     backgroundColor: "white",
-    padding: 18,
-    borderRadius: 16,
+    padding: 20,
+    borderRadius: 18,
+    marginBottom: 20,
+  },
+
+
+  plantName: {
+    fontSize: 26,
+    fontWeight: "bold",
     marginBottom: 15,
   },
 
-  label: {
-    fontSize: 18,
-    fontWeight: "bold",
+
+  info: {
+    fontSize: 17,
+    marginBottom: 10,
   },
 
-  detail: {
-    marginTop: 8,
-    fontSize: 16,
-    color: "#555",
+
+  button: {
+    backgroundColor: "#174d2c",
+    padding: 16,
+    borderRadius: 16,
+    alignItems: "center",
+    marginBottom: 12,
   },
+
 
   deleteButton: {
-    backgroundColor: "#b33a3a",
+    backgroundColor: "#b23b3b",
     padding: 16,
-    borderRadius: 14,
+    borderRadius: 16,
     alignItems: "center",
-    marginTop: 20,
   },
 
-  deleteText: {
+
+  buttonText: {
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
   },
-editButton: {
-  backgroundColor: "#174d2c",
-  padding: 16,
-  borderRadius: 14,
-  alignItems: "center",
-  marginTop: 20,
-},
 
-editText: {
-  color: "white",
-  fontWeight: "bold",
-  fontSize: 16,
-},
-waterButton: {
-  backgroundColor: "#5b8c5a",
-  padding: 16,
-  borderRadius: 14,
-  alignItems: "center",
-  marginTop: 10,
-},
-
-waterText: {
-  color: "white",
-  fontWeight: "bold",
-  fontSize: 16,
-},
 });

@@ -12,6 +12,7 @@ type PlantCardProps = {
   water: string;
   light: string;
   image?: string;
+  favorite?: boolean;
   navigation: any;
 };
 
@@ -21,6 +22,7 @@ export default function PlantCard({
   water,
   light,
   image,
+  favorite,
   navigation,
 }: PlantCardProps) {
 
@@ -46,8 +48,9 @@ export default function PlantCard({
   />
 ) : null}
       <Text style={styles.plantName}>
-        🌱 {name}
-      </Text>
+  {favorite ? "⭐ " : "🌱 "}
+  {name}
+</Text>
 
       <Text style={styles.info}>
         💧 Water: {water}
