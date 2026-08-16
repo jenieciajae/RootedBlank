@@ -78,3 +78,38 @@ I was responsible for:
 - Photo timeline for plant growth
 - Improved plant identification confidence handling
 - Additional accessibility improvements
+
+
+## App Screenshots
+
+### Home
+The Rooted dashboard gives users a quick overview of their plants, daily care tasks, favorites, and plant collection.
+
+### Plant Details
+Users can view plant information, watering history, upcoming watering dates, and favorite status.
+
+### Add & Search Plants
+Users can manually add plants or search a plant library to quickly build their collection.
+
+### Plant Identification
+Users can take or upload a photo to identify a plant and receive care information.
+
+### Statistics
+Users can view information about their plant collection and care activity.
+
+
+## 🌱 Demo
+
+Rooted is currently being developed as a portfolio project.
+
+The application is built with React Native and Expo and can be run locally using Expo Go.
+
+
+```md
+## 📌 Project Status
+
+🟢 Core functionality complete
+
+Rooted currently includes plant management, plant identification, watering reminders, favorites, statistics, API integrations, and persistent local storage.
+
+The project will continue to receive visual and UX improvements as part of my design portfolio.
