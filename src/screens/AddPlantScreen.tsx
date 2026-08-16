@@ -1,9 +1,10 @@
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  Button, 
-  StyleSheet 
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  ScrollView,
 } from "react-native";
 
 import { useState } from "react";
@@ -31,65 +32,122 @@ export default function AddPlantScreen({ navigation }: any) {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+  style={styles.container}
+  contentContainerStyle={styles.content}
+  showsVerticalScrollIndicator={false}
+>
 
-      <Text style={styles.title}>
-        Add a Plant 🌿
-      </Text>
+      <View style={styles.header}>
+  <Text style={styles.title}>
+    Add a Plant
+  </Text>
 
+  <Text style={styles.emoji}>
+    🌿
+  </Text>
+</View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Plant name"
-        value={name}
-        onChangeText={setName}
-      />
-
-
-      <TextInput
-        style={styles.input}
-        placeholder="Water schedule"
-        value={water}
-        onChangeText={setWater}
-      />
+<Text style={styles.subtitle}>
+  Tell Rooted a little about your new plant.
+</Text>
 
 
       <TextInput
-        style={styles.input}
-        placeholder="Light requirements"
-        value={light}
-        onChangeText={setLight}
-      />
+  style={styles.input}
+  placeholder="Plant name"
+  placeholderTextColor="#888"
+  value={name}
+  onChangeText={setName}
+/>
+
+<TextInput
+  style={styles.input}
+  placeholder="Water schedule (e.g. Every 7 days)"
+  placeholderTextColor="#888"
+  value={water}
+  onChangeText={setWater}
+/>
+
+<TextInput
+  style={styles.input}
+  placeholder="Light requirements (e.g. Bright indirect light)"
+  placeholderTextColor="#888"
+  value={light}
+  onChangeText={setLight}
+/>
 
 
-      <Button
-        title="Save Plant"
-        onPress={handleSave}
-      />
-
-    </View>
-  );
+      <Pressable
+  style={styles.saveButton}
+  onPress={handleSave}
+>
+  <Text style={styles.saveButtonText}>
+    🌱 Save Plant
+  </Text>
+</Pressable>
+   </ScrollView>
+);
 }
 
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: "#f4f7f2",
   },
 
+  content: {
+    padding: 20,
+    paddingBottom: 40,
+  },
+
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 20,
+    marginBottom: 8,
+  },
+
   title: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 30,
+    color: "#123F21",
+  },
+
+  emoji: {
+    fontSize: 34,
+  },
+
+  subtitle: {
+    fontSize: 15,
+    color: "#666",
+    marginBottom: 25,
+    lineHeight: 21,
   },
 
   input: {
     backgroundColor: "white",
-    padding: 15,
-    borderRadius: 12,
+    padding: 16,
+    borderRadius: 16,
     marginBottom: 15,
     fontSize: 16,
+    borderWidth: 1,
+    borderColor: "#E2E8DE",
+  },
+
+  saveButton: {
+    backgroundColor: "#123F21",
+    padding: 17,
+    borderRadius: 16,
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  saveButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 17,
   },
 });

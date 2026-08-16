@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Image,
   Pressable,
+  ScrollView,
 } from "react-native";
 
 import { usePlants } from "../context/PlantContext";
@@ -52,12 +53,22 @@ console.log(
 
 
   return (
-    <View style={styles.container}>
+  <View style={styles.container}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.content}
+    >
 
 
-      <Text style={styles.title}>
-        🌿 Plant Details
-      </Text>
+      <View style={styles.detailsHeader}>
+  <Text style={styles.title}>
+    Plant Details
+  </Text>
+
+  <Text style={styles.headerEmoji}>
+    🌿
+  </Text>
+</View>
 
 
 
@@ -136,20 +147,20 @@ console.log(
 
 
       <Pressable
-        style={styles.button}
-        onPress={toggleFavorite}
-      >
+  style={styles.secondaryButton}
+  onPress={toggleFavorite}
+>
 
-        <Text style={styles.buttonText}>
-          {plant.favorite
-            ? "⭐ Remove Favorite"
-            : "☆ Add Favorite"}
-        </Text>
+        <Text style={styles.secondaryButtonText}>
+  {plant.favorite
+    ? "⭐ Remove Favorite"
+    : "☆ Add Favorite"}
+</Text>
 
       </Pressable>
 
 <Pressable
-  style={styles.button}
+  style={styles.secondaryButton}
   onPress={() =>
     navigation.navigate("EditPlant", {
       plant,
@@ -179,7 +190,7 @@ console.log(
       </Pressable>
 
 
-
+        </ScrollView>
     </View>
   );
 }
@@ -196,10 +207,10 @@ const styles = StyleSheet.create({
 
 
   title: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
+  fontSize: 30,
+  fontWeight: "bold",
+  color: "#123F21",
+},
 
 
   image: {
@@ -211,18 +222,23 @@ const styles = StyleSheet.create({
 
 
   card: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 18,
-    marginBottom: 20,
-  },
+  backgroundColor: "white",
+  padding: 20,
+  borderRadius: 20,
+  marginBottom: 20,
+  elevation: 2,
+  shadowColor: "#000",
+  shadowOpacity: 0.06,
+  shadowRadius: 8,
+},
 
 
   plantName: {
-    fontSize: 26,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
+  fontSize: 26,
+  fontWeight: "bold",
+  marginBottom: 15,
+  color: "#123F21",
+},
 
 
   info: {
@@ -253,5 +269,33 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+
+  content: {
+  paddingBottom: 30,
+},
+detailsHeader: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: 20,
+},
+
+headerEmoji: {
+  fontSize: 32,
+},
+
+secondaryButton: {
+  backgroundColor: "#EA9BA1",
+  padding: 16,
+  borderRadius: 16,
+  alignItems: "center",
+  marginBottom: 12,
+},
+
+secondaryButtonText: {
+  color: "#123F21",
+  fontWeight: "bold",
+  fontSize: 16,
+},
 
 });

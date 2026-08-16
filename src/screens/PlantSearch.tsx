@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { usePlants } from "../context/PlantContext";
 import {
   View,
- Text,
+  Text,
   TextInput,
   Pressable,
   FlatList,
   Image,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 
 import { searchPlants, getPlantDetails } from "../api/plantApi";
@@ -32,16 +33,31 @@ export default function PlantSearch({ navigation }: any) {
   return (
     <View style={styles.container}>
 
-      <Text style={styles.title}>
-        Search Plants 🌱
-      </Text>
+      <View style={styles.header}>
+  <View>
+    <Text style={styles.title}>
+      Find a Plant
+    </Text>
+
+    <Text style={styles.subtitle}>
+      Search our plant library to add a new plant.
+    </Text>
+  </View>
+
+  <Text style={styles.headerEmoji}>
+    🔎
+  </Text>
+</View>
 
       <TextInput
-        style={styles.input}
-        placeholder="Search for a plant..."
-        value={query}
-        onChangeText={setQuery}
-      />
+  style={styles.input}
+  placeholder="Search for a plant..."
+  placeholderTextColor="#888"
+  value={query}
+  onChangeText={setQuery}
+  onSubmitEditing={handleSearch}
+  returnKeyType="search"
+/>
 
       <Pressable
         style={styles.button}
@@ -53,11 +69,26 @@ export default function PlantSearch({ navigation }: any) {
       </Pressable>
 
       {loading && (
-        <Text style={styles.loading}>
-          Searching...
-        </Text>
-      )}
+  <View style={styles.loadingContainer}>
+    <ActivityIndicator size="small" />
+    <Text style={styles.loading}>
+      Finding plants...
+    </Text>
+  </View>
+)}
+    {!loading && query.trim() && results.length === 0 && (
+  <View style={styles.emptyState}>
+    <Text style={styles.emptyEmoji}>🌱</Text>
 
+    <Text style={styles.emptyTitle}>
+      No plants found
+    </Text>
+
+    <Text style={styles.emptyText}>
+      Try searching for another plant name.
+    </Text>
+  </View>
+)}
       <FlatList
         data={results}
         keyExtractor={(item) => item.id.toString()}
@@ -121,26 +152,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#f4f7f2",
   },
 
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-
-  input: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
-  },
-
-  button: {
-    backgroundColor: "#174d2c",
-    padding: 15,
-    borderRadius: 12,
-    alignItems: "center",
-    marginBottom: 20,
-  },
 
   buttonText: {
     color: "white",
@@ -148,17 +159,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  loading: {
-    marginBottom: 15,
-    fontSize: 16,
-  },
 
   card: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 15,
-    marginBottom: 15,
-  },
+  backgroundColor: "white",
+  borderRadius: 20,
+  padding: 15,
+  marginBottom: 15,
+  elevation: 2,
+},
 
   image: {
     width: "100%",
@@ -168,9 +176,11 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
+  fontSize: 20,
+  fontWeight: "bold",
+  color: "#123F21",
+},
+
   addButton: {
   backgroundColor: "#174d2c",
   padding: 12,
@@ -182,5 +192,86 @@ const styles = StyleSheet.create({
 addButtonText: {
   color: "white",
   fontWeight: "bold",
+},
+
+header: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginTop: 20,
+  marginBottom: 20,
+},
+
+title: {
+  fontSize: 30,
+  fontWeight: "bold",
+  color: "#123F21",
+},
+
+subtitle: {
+  fontSize: 14,
+  color: "#666",
+  marginTop: 4,
+  maxWidth: 280,
+  lineHeight: 20,
+},
+
+headerEmoji: {
+  fontSize: 32,
+},
+
+input: {
+  backgroundColor: "white",
+  borderRadius: 16,
+  padding: 16,
+  marginBottom: 12,
+  fontSize: 16,
+  borderWidth: 1,
+  borderColor: "#E2E8DE",
+},
+
+button: {
+  backgroundColor: "#123F21",
+  padding: 16,
+  borderRadius: 16,
+  alignItems: "center",
+  marginBottom: 20,
+},
+
+loadingContainer: {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
+  marginBottom: 15,
+},
+
+loading: {
+  marginLeft: 8,
+  fontSize: 15,
+  color: "#666",
+},
+
+emptyState: {
+  alignItems: "center",
+  justifyContent: "center",
+  paddingVertical: 40,
+},
+
+emptyEmoji: {
+  fontSize: 45,
+  marginBottom: 10,
+},
+
+emptyTitle: {
+  fontSize: 20,
+  fontWeight: "bold",
+  color: "#123F21",
+  marginBottom: 5,
+},
+
+emptyText: {
+  fontSize: 14,
+  color: "#666",
+  textAlign: "center",
 },
 });

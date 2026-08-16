@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 
 import PlantCard from "../components/PlantCard";
 import TaskCard from "../components/TaskCard";
@@ -28,38 +28,102 @@ export default function HomeScreen({ navigation }: any) {
   <ScrollView
     contentContainerStyle={styles.content}
   >
-      <Text style={styles.title}>
-        Rooted 🌿
-      </Text>
+      <View style={styles.header}>
+  <View>
+    <Text style={styles.greeting}>
+      Welcome back 🌿
+    </Text>
 
-      <Text style={styles.sectionTitle}>
-        Today's Tasks 🌱
-      </Text>
-      
-<Pressable
-  style={styles.statsButton}
-  onPress={() => navigation.navigate("Statistics")}
->
-  <Text style={styles.statsText}>
-    📊 View Statistics
+    <Text style={styles.title}>
+      Your Garden
+    </Text>
+  </View>
+
+  <Text style={styles.headerEmoji}>
+    🪴
   </Text>
-</Pressable>
-      {tasks.length > 0 ? (
-        tasks.map((plant) => (
-          <TaskCard
-            key={plant.id}
-            task={`Water ${plant.name}`}
-          />
-        ))
-      ) : (
-        <Text style={styles.noTasks}>
-          🎉 All plants are cared for today!
-        </Text>
-      )}
+</View>
 
-      <Text style={styles.subtitle}>
-        Your Plant Collection
-      </Text>
+      <View style={styles.sectionHeader}>
+  <View>
+    <Text style={styles.sectionTitle}>
+      Today's Tasks
+    </Text>
+
+    <Text style={styles.sectionSubtitle}>
+      Keep your plants happy and healthy
+    </Text>
+  </View>
+
+  <Text style={styles.taskEmoji}>🌱</Text>
+</View>
+      
+<View style={styles.quickActions}>
+
+  <Pressable
+    style={styles.quickActionCard}
+    onPress={() => navigation.navigate("Statistics")}
+  >
+    <Text style={styles.quickActionEmoji}>
+      📊
+    </Text>
+
+    <Text style={styles.quickActionTitle}>
+      Statistics
+    </Text>
+
+    <Text style={styles.quickActionSubtitle}>
+      View your garden
+    </Text>
+  </Pressable>
+
+  <Pressable
+    style={[styles.quickActionCard, styles.favoriteCard]}
+    onPress={() => navigation.navigate("Favorites")}
+  >
+    <Text style={styles.quickActionEmoji}>
+      ⭐
+    </Text>
+
+    <Text style={[styles.quickActionTitle, styles.favoriteCardTitle]}>
+  Favorites
+</Text>
+
+<Text style={[styles.quickActionSubtitle, styles.favoriteCardSubtitle]}>
+  Your favorite plants
+</Text>
+  </Pressable>
+
+</View>
+
+{tasks.length > 0 ? (
+  tasks.map((plant) => (
+    <TaskCard
+      key={plant.id}
+      task={`Water ${plant.name}`}
+    />
+  ))
+) : (
+  <Text style={styles.noTasks}>
+    🎉 All plants are cared for today!
+  </Text>
+)}
+
+      <View style={styles.collectionHeader}>
+  <View>
+    <Text style={styles.subtitle}>
+      Your Plants
+    </Text>
+
+    <Text style={styles.collectionCount}>
+      {plants.length} {plants.length === 1 ? "plant" : "plants"} in your collection
+    </Text>
+  </View>
+
+  <Text style={styles.collectionEmoji}>
+    🪴
+  </Text>
+</View>
 
       {sortedPlants.map((plant) => (
         <PlantCard
@@ -75,20 +139,31 @@ export default function HomeScreen({ navigation }: any) {
       ))}
 
 
-      <CustomButton
-        title="🔍 Search Plants"
-         onPress={() => navigation.navigate("PlantSearch")}
-     />
-     <CustomButton
-        title="📷 Identify Plant"
-        onPress={() => navigation.navigate("IdentifyPlant")}
-/>
+      <View style={styles.addSection}>
+  <Text style={styles.addSectionTitle}>
+    Add a New Plant
+  </Text>
+
+  <Text style={styles.addSectionSubtitle}>
+    Search our plant library or identify one with your camera.
+  </Text>
+
+  <CustomButton
+    title="🔍 Search Plants"
+    onPress={() => navigation.navigate("PlantSearch")}
+  />
+
+  <CustomButton
+    title="📷 Identify Plant"
+    onPress={() => navigation.navigate("IdentifyPlant")}
+  />
+</View>
     </ScrollView>
     <Pressable
   style={styles.fab}
   onPress={() => navigation.navigate("AddPlant")}
 >
-  <Text style={styles.fabText}>＋</Text>
+  <Text style={styles.fabText}>🌱</Text>
 </Pressable>
     </View>
   );
@@ -105,18 +180,8 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
 
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 20,
-  },
 
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 12,
-  },
+  
 
   noTasks: {
     fontSize: 16,
@@ -125,20 +190,19 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 15,
-    color: "#123F21",
-  },
+  fontSize: 23,
+  fontWeight: "bold",
+  color: "#123F21",
+},
+
   fab: {
   position: "absolute",
   bottom: 25,
   right: 25,
-  width: 65,
-  height: 65,
-  borderRadius: 32.5,
-  backgroundColor: "#174d2c",
+  width: 62,
+  height: 62,
+  borderRadius: 31,
+  backgroundColor: "#123F21",
   justifyContent: "center",
   alignItems: "center",
   elevation: 8,
@@ -148,21 +212,130 @@ const styles = StyleSheet.create({
 },
 
 fabText: {
-  color: "white",
-  fontSize: 34,
-  fontWeight: "300",
+  fontSize: 27,
 },
-statsButton: {
-  backgroundColor: "#123F21",
-  padding: 14,
-  borderRadius: 12,
+
+header: {
+  flexDirection: "row",
+  justifyContent: "space-between",
   alignItems: "center",
+  marginTop: 20,
+  marginBottom: 25,
+},
+
+greeting: {
+  fontSize: 16,
+  color: "#3AAE9E",
+  fontWeight: "600",
+  marginBottom: 4,
+},
+
+title: {
+  fontSize: 32,
+  fontWeight: "bold",
+  color: "#123F21",
+},
+
+headerEmoji: {
+  fontSize: 42,
+},
+sectionHeader: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: 15,
+},
+
+sectionTitle: {
+  fontSize: 23,
+  fontWeight: "bold",
+  color: "#123F21",
+  marginBottom: 4,
+},
+
+sectionSubtitle: {
+  fontSize: 14,
+  color: "#666",
+},
+
+taskEmoji: {
+  fontSize: 30,
+},
+collectionHeader: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginTop: 10,
+  marginBottom: 15,
+},
+
+collectionCount: {
+  fontSize: 14,
+  color: "#666",
+  marginTop: 2,
+},
+
+collectionEmoji: {
+  fontSize: 30,
+},
+addSection: {
+  marginTop: 15,
   marginBottom: 20,
 },
 
-statsText: {
-  color: "white",
+addSectionTitle: {
+  fontSize: 21,
   fontWeight: "bold",
-  fontSize: 16,
+  color: "#123F21",
+  marginBottom: 4,
+},
+
+addSectionSubtitle: {
+  fontSize: 14,
+  color: "#666",
+  marginBottom: 15,
+  lineHeight: 20,
+},
+
+quickActions: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  marginBottom: 20,
+},
+
+quickActionCard: {
+  width: "48%",
+  backgroundColor: "#123F21",
+  borderRadius: 18,
+  padding: 16,
+},
+
+favoriteCard: {
+  backgroundColor: "#EA9BA1",
+},
+
+quickActionEmoji: {
+  fontSize: 25,
+  marginBottom: 8,
+},
+
+quickActionTitle: {
+  fontSize: 17,
+  fontWeight: "bold",
+  color: "white",
+  marginBottom: 3,
+},
+
+quickActionSubtitle: {
+  fontSize: 12,
+  color: "rgba(255,255,255,0.8)",
+},
+
+favoriteCardTitle: {
+  color: "#123F21",
+},
+
+favoriteCardSubtitle: {
+  color: "#31563F",
 },
 });

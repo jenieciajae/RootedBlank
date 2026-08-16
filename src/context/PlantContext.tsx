@@ -6,6 +6,7 @@ import {
 } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getWateringDays } from "../utils/WateringSchedule";
 
 
 type Plant = {
@@ -34,32 +35,7 @@ const PlantContext = createContext<PlantContextType | undefined>(undefined);
 
 
 const PLANTS_KEY = "@rooted_plants";
-function calculateNextWatering(water: string) {
 
-  let days = 7;
-
-  if (water.toLowerCase().includes("frequent")) {
-    days = 3;
-  }
-
-  if (
-    water.toLowerCase().includes("rare") ||
-    water.toLowerCase().includes("2 weeks")
-  ) {
-    days = 14;
-  }
-
-
-  const date = new Date();
-
-  date.setDate(
-    date.getDate() + days
-  );
-
-
-  return date.toISOString();
-
-}
 
 export function PlantProvider({ children }: any) {
 
@@ -163,7 +139,13 @@ const waterPlant = async (id: string) => {
         ? {
             ...plant,
             lastWatered: new Date().toISOString(),
-            nextWatering: calculateNextWatering(plant.water),
+            nextWatering: (() => {
+  const date = new Date();
+  date.setDate(
+    date.getDate() + getWateringDays(plant.water)
+  );
+  return date.toISOString();
+})(),
           }
         : plant
     );

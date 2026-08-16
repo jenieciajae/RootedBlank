@@ -9,6 +9,7 @@ import PlantSearch from "../screens/PlantSearch";
 import StatisticsScreen from "../screens/StatisticsScreen";
 import IdentifyPlantScreen from "../screens/IdentifyPlantScreen";
 import PlantResultScreen from "../screens/PlantResultScreen";
+import FavoritesScreen from "../screens/FavoritesScreen";
 
 type RootStackParamList = {
   Home: undefined;
@@ -17,6 +18,7 @@ type RootStackParamList = {
   PlantDetails: { plant: any };
   EditPlant: { plant: any };
   Statistics: undefined;
+  Favorites: undefined;
   IdentifyPlant: undefined;
   PlantResult: { image: string };
 };
@@ -26,7 +28,18 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+  screenOptions={{
+    headerStyle: {
+      backgroundColor: "#f4f7f2",
+    },
+    headerTintColor: "#123F21",
+    headerTitleStyle: {
+      fontWeight: "bold",
+    },
+    headerShadowVisible: false,
+  }}
+>
 
         <Stack.Screen
           name="Home"
@@ -55,6 +68,10 @@ export default function AppNavigator() {
         <Stack.Screen
           name="Statistics"
           component={StatisticsScreen}
+        />
+        <Stack.Screen
+          name="Favorites"
+          component={FavoritesScreen}
         />
         <Stack.Screen
            name="IdentifyPlant"

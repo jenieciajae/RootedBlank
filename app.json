@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "RootedBlank",
-    "slug": "RootedBlank",
+    "name": "Rooted",
+    "slug": "Rooted",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logoo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {

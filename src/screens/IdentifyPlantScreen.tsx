@@ -4,6 +4,8 @@ import {
   StyleSheet,
   Pressable,
   Image,
+  ScrollView,
+  ActivityIndicator,
 } from "react-native";
 
 import { useState } from "react";
@@ -14,7 +16,7 @@ import { identifyPlant } from "../api/plantApi";
 export default function IdentifyPlantScreen({ navigation }: any) {
 
   const [image, setImage] = useState<string | null>(null);
-
+  const [loading, setLoading] = useState(false);
 
   const pickImage = async () => {
 
@@ -41,7 +43,7 @@ export default function IdentifyPlantScreen({ navigation }: any) {
     setImage(imageUri);
 
     try {
-
+        setLoading(true);
       const plantResult = await identifyPlant(imageUri);
 
       console.log(
@@ -59,7 +61,7 @@ navigation.navigate("PlantResult", {
 
 
     } catch (error) {
-
+      setLoading(false);
       console.log(
         "Identification error:",
         error
@@ -98,7 +100,7 @@ console.log("IMAGE URI:", imageUri);
 
 
     try {
-
+      setLoading(true);
       const plantResult = await identifyPlant(imageUri);
 console.log("CALLING PLANTNET");
       console.log(
@@ -114,7 +116,7 @@ console.log("CALLING PLANTNET");
 
 
     } catch (error) {
-
+      setLoading(false);
       console.log(
         "Identification error:",
         error
@@ -127,45 +129,87 @@ console.log("CALLING PLANTNET");
 };
 
   return (
-    <View style={styles.container}>
+  <ScrollView
+    style={styles.container}
+    contentContainerStyle={styles.content}
+    showsVerticalScrollIndicator={false}
+  >
 
-      <Text style={styles.title}>
-        🌿 Identify a Plant
+    <View style={styles.header}>
+      <View>
+        <Text style={styles.title}>
+          Identify a Plant
+        </Text>
+
+        <Text style={styles.description}>
+          Take or upload a photo and Rooted will help identify your plant.
+        </Text>
+      </View>
+
+      <Text style={styles.headerEmoji}>
+        📷
       </Text>
+    </View>
 
-
-      <Text style={styles.description}>
-        Upload a picture of a plant and Rooted will help identify it.
-      </Text>
-
-
-      {image && (
+    {image ? (
+      <View style={styles.previewCard}>
         <Image
           source={{ uri: image }}
           style={styles.image}
         />
-      )}
 
-
-      <Pressable
-        style={styles.cameraButton}
-        onPress={pickImage}
-      >
-        <Text style={styles.buttonText}>
-          🖼️ Choose Plant Photo
+        <Text style={styles.previewText}>
+          Your plant photo
         </Text>
-      </Pressable>
-      <Pressable
-  style={styles.cameraButton}
-  onPress={takePhoto}
->
-  <Text style={styles.buttonText}>
-    📷 Take Plant Photo
-  </Text>
-</Pressable>
+      </View>
+    ) : (
+      <View style={styles.placeholder}>
+        <Text style={styles.placeholderEmoji}>
+          🌿
+        </Text>
 
-    </View>
-  );
+        <Text style={styles.placeholderTitle}>
+          Ready to identify?
+        </Text>
+
+        <Text style={styles.placeholderText}>
+          Choose a photo from your gallery or take a new one.
+        </Text>
+      </View>
+    )}
+
+    {loading ? (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" />
+
+        <Text style={styles.loadingText}>
+          Identifying your plant...
+        </Text>
+      </View>
+    ) : (
+      <>
+        <Pressable
+          style={styles.primaryButton}
+          onPress={takePhoto}
+        >
+          <Text style={styles.buttonText}>
+            📷 Take Plant Photo
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={styles.secondaryButton}
+          onPress={pickImage}
+        >
+          <Text style={styles.secondaryButtonText}>
+            🖼️ Choose From Gallery
+          </Text>
+        </Pressable>
+      </>
+    )}
+
+  </ScrollView>
+);
 }
 
 
@@ -174,46 +218,123 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f4f7f2",
+  },
+
+  content: {
     padding: 20,
-    justifyContent: "center",
+    paddingBottom: 40,
   },
 
-
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-
-
-  description: {
-    fontSize: 16,
-    color: "#555",
-    marginBottom: 30,
-  },
-
-
-  image: {
-    width: "100%",
-    height: 250,
-    borderRadius: 20,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginTop: 20,
     marginBottom: 25,
   },
 
+  title: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#123F21",
+    marginBottom: 8,
+  },
 
-  cameraButton: {
-  backgroundColor: "#174d2c",
-  padding: 18,
-  borderRadius: 16,
-  alignItems: "center",
-  marginBottom: 15,
-},
+  description: {
+    fontSize: 15,
+    color: "#666",
+    lineHeight: 21,
+    maxWidth: 290,
+  },
 
+  headerEmoji: {
+    fontSize: 34,
+  },
+
+  placeholder: {
+    backgroundColor: "#E8F0E5",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    marginBottom: 25,
+  },
+
+  placeholderEmoji: {
+    fontSize: 55,
+    marginBottom: 12,
+  },
+
+  placeholderTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#123F21",
+    marginBottom: 6,
+  },
+
+  placeholderText: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    lineHeight: 20,
+  },
+
+  previewCard: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 12,
+    marginBottom: 25,
+    elevation: 2,
+  },
+
+  image: {
+    width: "100%",
+    height: 280,
+    borderRadius: 14,
+  },
+
+  previewText: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 10,
+    marginLeft: 4,
+  },
+
+  primaryButton: {
+    backgroundColor: "#123F21",
+    padding: 17,
+    borderRadius: 16,
+    alignItems: "center",
+    marginBottom: 12,
+  },
+
+  secondaryButton: {
+    backgroundColor: "#EA9BA1",
+    padding: 17,
+    borderRadius: 16,
+    alignItems: "center",
+  },
 
   buttonText: {
     color: "white",
     fontSize: 17,
     fontWeight: "bold",
+  },
+
+  secondaryButtonText: {
+    color: "#123F21",
+    fontSize: 17,
+    fontWeight: "bold",
+  },
+
+  loadingContainer: {
+    alignItems: "center",
+    paddingVertical: 30,
+  },
+
+  loadingText: {
+    marginTop: 12,
+    fontSize: 15,
+    color: "#666",
   },
 
 });
